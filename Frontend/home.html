@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chittagong Bank</title>
+    <link rel="icon" type="image/svg+xml" href="Logo(CBL).svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Role Selection & Dropdown - Golden Bronze UI Enhancement */
+        .role-btn {
+            transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+        }
+        /* Active State & Dropdown styling matching background (#b8a180) */
+        .role-btn.active {
+            background: rgba(184, 161, 128, 0.2) !important;
+            border: 1px solid rgba(184, 161, 128, 0.5) !important;
+            color: #b8a180 !important;
+            box-shadow: 0 0 15px rgba(184, 161, 128, 0.15);
+            opacity: 1 !important;
+        }
+
+        /* Register Page Selection Bars & Inputs */
+        select, .input-base {
+            background: rgba(184, 161, 128, 0.05) !important;
+            border: 1px solid rgba(184, 161, 128, 0.2) !important;
+            color: #b8a180 !important;
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+        }
+
+        select option {
+            background: #0f0f0f !important;
+            color: #b8a180 !important;
+        }
+
+        input:focus, select:focus {
+            border-color: rgba(184, 161, 128, 0.6) !important;
+            outline: none;
+            box-shadow: 0 0 10px rgba(184, 161, 128, 0.1);
+        }
+
+        /* Enhanced Professional Checkbox Styling */
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(184, 161, 128, 0.4);
+            border-radius: 4px;
+            background: rgba(184, 161, 128, 0.05);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .custom-checkbox:checked {
+            background: #b8a180;
+            border-color: #b8a180;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '✔';
+            position: absolute;
+            color: #000;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center; 
+            gap: 10px;
+        }
+
+        .checkbox-text {
+            color: #b8a180 !important; 
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        /* Professional Golden Bronze Exchange Rate Section */
+        .exchange-rate-panel {
+            background: rgba(184, 161, 128, 0.08);
+            border: 1px solid rgba(184, 161, 128, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .rate-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(184, 161, 128, 0.1);
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .rate-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(184, 161, 128, 0.4);
+        }
+
+        .rate-label {
+            font-size: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: rgba(184, 161, 128, 0.8);
+            letter-spacing: 0.05em;
+        }
+
+        .rate-value {
+            font-size: 11px;
+            font-weight: 800;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <div id="toast" class="toast"></div>
+
+    <div id="infoModal" class="modal-overlay" onclick="UI.closeModal()">
+        <div class="bg-white dark:bg-[#0f0f0f] border border-[#b8a1804d] rounded-2xl max-w-[550px] w-full p-[30px] relative shadow-[0_0_30px_rgba(184,161,128,0.1)] transition-all" onclick="event.stopPropagation()">
+            <button type="button" title="Close modal" onclick="UI.closeModal()" class="absolute top-4 right-4 text-slate-500 hover:text-black dark:hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <div class="blob-bg">
+        <div class="blob blob-primary"></div>
+        <div class="blob blob-secondary"></div>
+    </div>
+
+    <header class="h-16 border-b border-black/5 dark:border-white/5 bg-white/80 dark:bg-[#0a0a0ae6] backdrop-blur-md px-8 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <img src="Logo(CBL).svg" alt="BB" class="w-10 h-10 object-contain">
+            <div>
+                <h1 data-key="bankTitle" class="text-[11px] font-black uppercase tracking-wider leading-none text-slate-900 dark:text-[#f1f5f9]">Chittagong Bank PLC</h1>
+                <p data-key="tagline" class="text-[9px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-tight mt-1">Connecting Our Nation to global</p>
+            </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            <button onclick="UI.toggleTheme()" class="theme-toggle-btn" title="Toggle Theme">
+                <svg id="theme-icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                <svg id="theme-icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+
+            <div class="flex items-center bg-black/5 dark:bg-white/5 rounded-md p-1 border border-black/10 dark:border-white/10">
+                <button onclick="Lang.switch('en')" id="lang-en" class="lang-switch-btn active px-2 py-1 transition-all">EN</button>
+                <div class="w-[1px] h-3 bg-black/10 dark:bg-white/10 mx-1"></div>
+                <button onclick="Lang.switch('bn')" id="lang-bn" class="lang-switch-btn px-2 py-1 transition-all">BN</button>
+            </div>
+            
+            <a href="javascript:void(0)" onclick="UI.openNavModal('resources')" data-key="resources" class="hover:text-[#b8a180] transition-colors">Resources</a>
+            <a href="javascript:void(0)" onclick="UI.openNavModal('audit')" data-key="audit" class="hover:text-[#b8a180] transition-colors">Internal Audit</a>
+            <a href="javascript:void(0)" onclick="UI.openNavModal('recruitment')" data-key="recruitment" class="hover:text-[#b8a180] transition-colors">e-Recruitment</a>
+            <div class="h-4 w-[1px] bg-slate-300 dark:bg-slate-700"></div>
+            <div class="flex items-center gap-2 bg-slate-100 dark:bg-stone-900/30 px-3 py-1.5 rounded border border-slate-200 dark:border-stone-500/30 text-[#b8a180]">
+                <span class="w-1.5 h-1.5 bg-stone-500 rounded-full animate-pulse"></span> <span data-key="status">Status: Secured</span>
+            </div>
+            <button id="logout-nav-btn" onclick="UI.logout()" class="hidden text-red-500 font-black hover:bg-red-500/10 px-2 py-1 rounded">LOGOUT</button>
+        </nav>
+
+        <button type="button" title="Toggle navigation menu" class="md:hidden text-[#b8a180]" onclick="UI.toggleMobileMenu()">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </header>
+
+    <div id="mobile-menu" class="fixed top-0 right-0 h-full w-64 bg-white dark:bg-[#0a0a0a] border-l border-black/10 dark:border-white/10 z-[60] p-6 flex flex-col gap-6 md:hidden">
+        <button type="button" title="Close navigation menu" onclick="UI.toggleMobileMenu()" class="self-end text-slate-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex flex-col gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">
+            <p data-key="navigation" class="text-[#b8a180] mb-2 border-b border-[#b8a18022] pb-1">Navigation</p>
+            <a href="javascript:void(0)" onclick="UI.openNavModal('resources')" data-key="resources">Resources</a>
+            <a href="javascript:void(0)" onclick="UI.openNavModal('audit')" data-key="audit">Internal Audit</a>
+            <a href="javascript:void(0)" onclick="UI.openNavModal('recruitment')" data-key="recruitment">e-Recruitment</a>
+            <p data-key="language" class="text-[#b8a180] mt-4 mb-2 border-b border-[#b8a18022] pb-1">Language</p>
+            <div class="flex gap-4">
+                <button onclick="Lang.switch('en')" class="hover:text-[#b8a180]">English</button>
+                <button onclick="Lang.switch('bn')" class="hover:text-[#b8a180]">বাংলা</button>
+            </div>
+        </div>
+    </div>
+
+    <main id="auth-container" class="flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 px-8 py-10 max-w-[1600px] mx-auto w-full">
+        
+        <aside class="lg:col-span-3 space-y-6">
+            <section class="glass-panel p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 data-key="locations" class="text-[10px] font-black uppercase tracking-widest text-[#b8a180]">Locations</h2>
+                    <div class="flex gap-2 text-[8px] font-bold uppercase">
+                        <button id="tab-chattogram" onclick="UI.filterBranch('chattogram')" class="region-tab active border-b-2 border-[#b8a180] text-[#b8a180] pb-1" data-key="chattogram">Chattogram</button>
+                        <button id="tab-dhaka" onclick="UI.filterBranch('dhaka')" class="region-tab text-slate-400 pb-1" data-key="dhaka">Dhaka</button>
+                    </div>
+                </div>
+
+                <div id="group-chattogram" class="branch-group space-y-4">
+                    <div class="group cursor-pointer">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="w-1.5 h-1.5 bg-[#b8a180] rounded-full group-hover:animate-ping"></span>
+                            <h3 data-key="agrabad" class="text-[11px] font-bold dark:text-slate-200">Agrabad Branch (Head Office)</h3>
+                        </div>
+                        <p data-key="agrabadAddr" class="text-[9px] text-slate-500 ml-4 mb-1">24/A Tower, Commercial Area</p>
+                        <div class="flex items-center gap-2 text-[8px] ml-4">
+                            <span data-key="open" class="text-emerald-500 font-bold">Open:</span>
+                            <span class="text-slate-400">09:00 - 16:00 BST</span>
+                        </div>
+                    </div>
+
+                    <div class="h-[1px] w-full bg-black/5 dark:bg-white/5"></div>
+
+                    <div class="group cursor-pointer">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="w-1.5 h-1.5 bg-[#b8a180] rounded-full"></span>
+                            <h3 data-key="gec" class="text-[11px] font-bold dark:text-slate-200">GEC Corporate Branch</h3>
+                        </div>
+                        <p data-key="gecAddr" class="text-[9px] text-slate-500 ml-4 mb-1">Central Plaza, CDA Avenue</p>
+                        <div class="flex items-center gap-2 text-[8px] ml-4">
+                            <span data-key="open" class="text-emerald-500 font-bold">Open:</span>
+                            <span class="text-slate-400">09:30 - 17:00 BST</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="group-dhaka" class="branch-group hidden">
+                    <div class="opening-soon-card p-4 rounded-xl text-center">
+                        <div class="inline-block px-2 py-0.5 bg-[#b8a180]/10 text-[#b8a180] text-[8px] font-black uppercase tracking-tighter rounded mb-2">Expansion Phase</div>
+                        <h3 data-key="dhakaSoon" class="text-[11px] font-bold mb-1">Dhaka Branch Opening Soon</h3>
+                        <p data-key="dhakaSoonDesc" class="text-[9px] text-slate-500">Our Corporate Presence is Coming to the Capital City</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-panel p-6 rounded-2xl space-y-4">
+                <h2 data-key="securityHub" class="text-[10px] font-black uppercase tracking-widest text-[#b8a180]">Security Hub</h2>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center text-[9px]">
+                        <span data-key="infraActive" class="text-slate-500 font-bold uppercase tracking-tighter">Infrastructure Active</span>
+                        <span class="text-emerald-500 font-black">99.9%</span>
+                    </div>
+                    <div class="h-1 bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 w-[99.9%]"></div>
+                    </div>
+
+                    <div class="pt-2 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-3 h-3 text-[#b8a180]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span data-key="encLayer" class="text-[9px] font-bold text-slate-400">Encryption Layer:</span>
+                            <span data-key="aes" class="text-[8px] font-black text-[#b8a180] uppercase">Military-Grade AES-512</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-3 h-3 text-[#b8a180]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span data-key="bioLayer" class="text-[9px] font-bold text-slate-400">Biometric Layer:</span>
+                            <span data-key="e2eEnforced" class="text-[8px] font-black text-[#b8a180] uppercase">End-to-End Enforced</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-[1px] w-full bg-black/5 dark:bg-white/5"></div>
+                
+                <div class="flex items-center gap-3">
+                    <div class="relative w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
+                        <div class="absolute inset-0 border border-emerald-500/20 rounded-lg"></div>
+                    </div>
+                    <div>
+                        <p data-key="surveillance" class="text-[9px] font-black uppercase text-emerald-500 leading-tight">Surveillance: Active</p>
+                        <p class="text-[7px] text-slate-500 font-mono tracking-tighter">NODE_ID: CG-7742-SEC</p>
+                    </div>
+                </div>
+            </section>
+        </aside>
+
+        <section class="lg:col-span-6 space-y-6">
+            <div id="tab-switcher" class="glass-panel p-1 rounded-2xl flex">
+                <button id="login-btn" onclick="UI.switchTab('login')" class="tab-btn active flex-1 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all" data-key="login">Login</button>
+                <button id="register-btn" onclick="UI.switchTab('register')" class="tab-btn flex-1 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all opacity-40 hover:opacity-100" data-key="register">Register</button>
+            </div>
+
+            <div id="login-portal" class="tab-content active glass-panel p-10 rounded-2xl relative overflow-hidden">
+                <div class="grid-pattern"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <h2 class="text-2xl font-black text-[#b8a180] tracking-tight mb-1" data-key="login">Login</h2>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Digital Banking Authentication</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <span id="role-user" onclick="UI.toggleRegFields('user')" class="role-btn px-4 py-1.5 bg-black/10 dark:bg-white/5 text-slate-500 text-[8px] font-black rounded uppercase cursor-pointer active" data-key="userRole">User</span>
+                            <span id="role-staff" onclick="UI.toggleRegFields('staff')" class="role-btn px-4 py-1.5 bg-black/10 dark:bg-white/5 text-slate-500 text-[8px] font-black rounded uppercase cursor-pointer opacity-60 hover:opacity-100" data-key="staffRole">Staff</span>
+                            <span id="role-admin" onclick="UI.toggleRegFields('admin')" class="role-btn px-4 py-1.5 bg-black/10 dark:bg-white/5 text-slate-500 text-[8px] font-black rounded uppercase cursor-pointer opacity-60 hover:opacity-100" data-key="adminRole">Admin</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-5">
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-black uppercase tracking-[0.1em] text-slate-400 ml-1" data-key="emailLabel">Email / Account ID</label>
+                            <input type="text" id="login-id" data-placeholder="emailLabel" placeholder="Email / Account ID" class="input-base w-full h-12 px-5 rounded-xl text-[11px] font-bold">
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <label class="text-[9px] font-black uppercase tracking-[0.1em] text-slate-400 ml-1" data-key="passLabel">Password</label>
+                            </div>
+                            <input type="password" id="login-pass" placeholder="Enter Your Password" class="input-base w-full h-12 px-5 rounded-xl text-[11px] font-bold">
+                        </div>
+
+                        <div class="py-4">
+                            <button onclick="UI.triggerBiometric('login')" class="w-full h-24 border-2 border-dashed border-[#b8a18044] rounded-2xl flex flex-col items-center justify-center gap-3 group hover:border-[#b8a180] transition-all relative overflow-hidden">
+                                <div class="scan-line hidden group-active:block"></div>
+                                <div class="w-10 h-10 rounded-full bg-[#b8a18011] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <svg class="w-5 h-5 text-[#b8a180]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.625 2.655A9 9 0 0119 11a1 1 0 11-2 0 7 7 0 00-9.625-6.492 1 1 0 11-.75-1.853zM4.662 5a1 1 0 011.243.681 7 7 0 004.868 4.868 1 1 0 01-.681 1.243 9 9 0 01-6.111-6.111A1 1 0 014.662 5z" clip-rule="evenodd"/></svg>
+                                </div>
+                                <span id="bio-login-txt" data-key="bioVerify" class="text-[9px] font-black uppercase tracking-[0.15em] text-[#b8a180]">Verify Fingerprint to Unlock</span>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center gap-4 pt-2">
+                            <button id="main-login-btn" onclick="UI.handleLogin()" class="flex-grow bg-[#b8a180] text-white py-3.5 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all" data-key="login">Login</button>
+                            <button type="button" title="Forgot Password" class="w-12 h-12 rounded-lg border border-[#b8a18033] flex items-center justify-center text-[#b8a180] hover:bg-[#b8a18011] transition-all">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" stroke-width="1.5"/></svg>
+                            </button>
+                        </div>
+
+                        <p class="text-center text-[9px] font-bold text-[#b8a180] cursor-pointer hover:underline uppercase tracking-widest pt-4" data-key="forgot">Forgot Password?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="register-portal" class="tab-content hidden glass-panel p-10 rounded-2xl">
+                <div class="flex justify-between items-start mb-10">
+                    <div>
+                        <h2 class="text-2xl font-black text-[#b8a180] tracking-tight mb-1" data-key="register">Register</h2>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Open Secure Digital Banking Account</p>
+                    </div>
+                    <select onchange="UI.toggleRegFields(this.value)" title="Select account type" class="rounded text-[9px] font-bold px-3 py-1.5 focus:outline-none">
+                        <option value="user" data-key="genUser">General User</option>
+                        <option value="staff" data-key="staffRole">Staff</option>
+                        <option value="admin" data-key="adminRole">Admin</option>
+                    </select>
+                </div>
+
+                <form id="register-form" class="space-y-5" onsubmit="return UI.handleRegistration(event)">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-black uppercase text-slate-400 ml-1" data-key="regName">Full Legal Name (As Per NID)</label>
+                            <input type="text" id="reg-name" required placeholder="Full Legal Name (as per NID)" class="input-base w-full h-11 px-4 rounded-lg text-[10px] font-bold">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-black uppercase text-slate-400 ml-1" data-key="regNid">NID Number</label>
+                            <input type="number" id="reg-nid" required placeholder="NID Number" title="Enter your NID Number" class="input-base w-full h-11 px-4 rounded-lg text-[10px] font-bold">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-black uppercase text-slate-400 ml-1" data-key="regEmail">Official Email Address</label>
+                            <input type="email" id="reg-email" required placeholder="Official Email Address" class="input-base w-full h-11 px-4 rounded-lg text-[10px] font-bold">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-black uppercase text-slate-400 ml-1" data-key="regMobile">Mobile Number (+880)</label>
+                            <input type="tel" id="reg-mobile" required placeholder="Mobile Number (+880)" class="input-base w-full h-11 px-4 rounded-lg text-[10px] font-bold">
+                        </div>
+                    </div>
+
+                    <div id="admin-fields" class="hidden grid grid-cols-2 gap-4 p-4 rounded-xl border border-[#b8a18022]">
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-black uppercase text-slate-400 ml-1" data-key="dept">Department</label>
+                            <select id="reg-dept" title="Select Department" class="w-full h-10 px-4 rounded-lg text-[10px] font-bold">
+                                <option value="" disabled selected>Select Department</option>
+                                <option value="IT">Information Technology</option>
+                                <option value="Audit">Internal Audit</option>
+                                <option value="Operations">Operations</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-black uppercase text-slate-400 ml-1" data-key="branch">Branch</label>
+                            <select id="reg-branch" title="Select Branch" class="w-full h-10 px-4 rounded-lg text-[10px] font-bold">
+                                <option value="" disabled selected>Select Branch</option>
+                                <option value="Agrabad">Agrabad Branch</option>
+                                <option value="GEC">GEC Branch</option>
+                                <option value="Dhaka">Dhaka Corporate</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="py-2">
+                        <div onclick="UI.triggerBiometric('register')" class="flex items-center gap-4 p-4 border border-dashed border-[#b8a18066] rounded-xl cursor-pointer hover:bg-[#b8a18005] transition-all">
+                            <div class="w-10 h-10 rounded-full bg-[#b8a18011] flex items-center justify-center text-[#b8a180]">
+                                <svg id="bio-check" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.625 2.655A9 9 0 0119 11a1 1 0 11-2 0 7 7 0 00-9.625-6.492 1 1 0 11-.75-1.853zM4.662 5a1 1 0 011.243.681 7 7 0 004.868 4.868 1 1 0 01-.681 1.243 9 9 0 01-6.111-6.111A1 1 0 014.662 5z" clip-rule="evenodd"/></svg>
+                            </div>
+                            <div>
+                                <p id="bio-reg-status" data-key="bioStore" class="text-[10px] font-black uppercase text-[#b8a180]">Store Fingerprint Data</p>
+                                <p class="text-[8px] text-slate-500 uppercase">Encrypted local storage only</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[9px] font-black uppercase text-slate-400 ml-1" data-key="regPass">Create Secure Password</label>
+                        <input type="password" id="reg-pass" required placeholder="Create Secure Password" class="input-base w-full h-11 px-4 rounded-lg text-[10px] font-bold">
+                    </div>
+
+                    <div class="checkbox-container py-3">
+                        <input type="checkbox" id="reg-terms" required class="custom-checkbox">
+                        <label for="reg-terms" data-key="terms" class="checkbox-text">I agree to the Digital Banking Terms & Security Policy</label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#b8a180] text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-[0_10px_20px_-5px_#b8a18066] hover:translate-y-[-2px] transition-all" data-key="registerBtn">Initiate Registration</button>
+                </form>
+            </div>
+
+            <div id="admin-dashboard" class="hidden space-y-6">
+                <div class="glass-panel p-8 rounded-2xl border-2 border-[#b8a180]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-black text-[#b8a180] uppercase tracking-tighter">Administration Panel</h2>
+                        <button onclick="Admin.openAddModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] font-black px-4 py-2 rounded uppercase transition-all">Add New Record</button>
+                    </div>
+                    
+                    <div class="admin-table-container">
+                        <table id="records-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Branch</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-table-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <button onclick="UI.openFeatureModal('fund')" class="glass-panel p-4 rounded-2xl flex flex-col items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-width="2"/></svg>
+                    </div>
+                    <span data-key="fund" class="text-[9px] font-black uppercase tracking-widest text-slate-500 group-hover:text-[#b8a180]">Fund Transfer</span>
+                </button>
+                <button onclick="UI.openFeatureModal('statement')" class="glass-panel p-4 rounded-2xl flex flex-col items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"/></svg>
+                    </div>
+                    <span data-key="statement" class="text-[9px] font-black uppercase tracking-widest text-slate-500 group-hover:text-[#b8a180]">E-Statement</span>
+                </button>
+                <button onclick="UI.openFeatureModal('cards')" class="glass-panel p-4 rounded-2xl flex flex-col items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-width="2"/></svg>
+                    </div>
+                    <span data-key="cards" class="text-[9px] font-black uppercase tracking-widest text-slate-500 group-hover:text-[#b8a180]">Cards Control</span>
+                </button>
+            </div>
+        </section>
+
+        <aside class="lg:col-span-3 space-y-6">
+            <section class="glass-panel p-6 rounded-2xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 rounded bg-[#b8a1801a] flex items-center justify-center">
+                        <svg class="w-4 h-4 text-[#b8a180]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h2 data-key="noticeTitle" class="text-[10px] font-black uppercase tracking-widest text-[#b8a180]">System Notices & Job Circulars</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="relative pl-4 border-l-2 border-[#b8a18033] hover:border-[#b8a180] transition-colors cursor-default">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span data-key="liveUpdates" class="text-[7px] font-black px-1.5 py-0.5 bg-red-500 text-white rounded-sm uppercase animate-pulse">Live Updates</span>
+                        </div>
+                        <h3 data-key="notice1" class="text-[10px] font-bold dark:text-slate-200 leading-tight">Updated RTGS Maintenance Schedule - Phase 2</h3>
+                        <p data-key="notice1desc" class="text-[9px] text-slate-500 mt-1">Core banking synchronization will occur tonight at 23:00 BST.</p>
+                    </div>
+
+                    <div class="relative pl-4 border-l-2 border-[#b8a18033] hover:border-[#b8a180] transition-colors cursor-default">
+                        <h3 data-key="notice2" class="text-[10px] font-bold dark:text-slate-200 leading-tight">Mandatory MFA Update for Branch Officers</h3>
+                        <p data-key="notice2desc" class="text-[9px] text-slate-500 mt-1">Level-3 security credentials must be renewed by the weekend.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-panel p-6 rounded-2xl">
+                <h2 data-key="branchDirectory" class="text-[10px] font-black uppercase tracking-widest text-[#b8a180] mb-6">Regional Branch Directory</h2>
+                <div class="admin-table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-key="branch">Branch</th>
+                                <th data-key="dept">Department</th>
+                                <th data-key="status">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold">Agrabad</td>
+                                <td>Corporate</td>
+                                <td class="text-emerald-500 font-bold uppercase">Online</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">GEC</td>
+                                <td>Retail</td>
+                                <td class="text-emerald-500 font-bold uppercase">Online</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Pahartali</td>
+                                <td>Ops</td>
+                                <td class="text-orange-500 font-bold uppercase">Limited</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Halishahar</td>
+                                <td>Retail</td>
+                                <td class="text-emerald-500 font-bold uppercase">Online</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Nasirabad</td>
+                                <td>Security</td>
+                                <td class="text-emerald-500 font-bold uppercase">Online</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="exchange-rate-panel">
+                    <h2 class="text-[9px] font-black uppercase tracking-[0.2em] text-[#b8a180] mb-4 text-center">Global Exchange Rates</h2>
+                    <div class="space-y-3">
+                        <div class="rate-card">
+                            <span class="rate-label">USD / BDT</span>
+                            <div class="flex items-center gap-2">
+                                <span id="rate-usd" class="rate-value">110.25</span>
+                                <span id="dir-usd" class="text-[10px]">↑</span>
+                            </div>
+                        </div>
+                        <div class="rate-card">
+                            <span class="rate-label">EUR / BDT</span>
+                            <div class="flex items-center gap-2">
+                                <span id="rate-eur" class="rate-value">119.40</span>
+                                <span id="dir-eur" class="text-[10px]">↓</span>
+                            </div>
+                        </div>
+                        <div class="rate-card">
+                            <span class="rate-label">GBP / BDT</span>
+                            <div class="flex items-center gap-2">
+                                <span id="rate-gbp" class="rate-value">140.15</span>
+                                <span id="dir-gbp" class="text-[10px]">↑</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </aside>
+    </main>
+
+    <footer class="bg-black text-white p-12 border-t border-white/5">
+        <div class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div class="space-y-6">
+                <div class="flex items-center gap-3">
+                    <img src="Logo(CBL).svg" alt="CBL" class="w-8 h-8">
+                    <h2 class="text-sm font-black uppercase tracking-wider">Chittagong Bank</h2>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed max-w-[280px]">
+                    Providing world-class digital banking solutions since 1998. Committed to security, innovation, and the financial growth of our community.
+                </p>
+                <div class="flex gap-12 pt-4">
+                    <div>
+                        <h4 class="text-xl font-black">25+</h4>
+                        <p class="text-[8px] uppercase tracking-tighter text-slate-500">Years Excellence</p>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-black">1M+</h4>
+                        <p class="text-[8px] uppercase tracking-tighter text-slate-500">Active Users</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-4">Banking Services</h3>
+                <ul class="space-y-4 text-[11px] text-slate-400 font-medium">
+                    <li><a href="#" class="hover:text-[#b8a180] transition-colors">Corporate Banking</a></li>
+                    <li><a href="#" class="hover:text-[#b8a180] transition-colors">Personal Loans</a></li>
+                    <li><a href="#" class="hover:text-[#b8a180] transition-colors">Investment Plans</a></li>
+                    <li><a href="#" class="hover:text-[#b8a180] transition-colors">Islamic Banking</a></li>
+                </ul>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-4">Security & Compliance</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-lg text-center group hover:bg-white/10 transition-all">
+                        <h4 class="text-[10px] font-black">ISO 27001</h4>
+                        <p class="text-[7px] text-slate-500 uppercase mt-1">Certified</p>
+                    </div>
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-lg text-center group hover:bg-white/10 transition-all">
+                        <h4 class="text-[10px] font-black">PCI-DSS</h4>
+                        <p class="text-[7px] text-slate-500 uppercase mt-1">Compliant</p>
+                    </div>
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-lg text-center group hover:bg-white/10 transition-all">
+                        <h4 class="text-[10px] font-black">SOC2</h4>
+                        <p class="text-[7px] text-slate-500 uppercase mt-1">Type II</p>
+                    </div>
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-lg text-center group hover:bg-white/10 transition-all">
+                        <h4 class="text-[10px] font-black">GDPR</h4>
+                        <p class="text-[7px] text-slate-500 uppercase mt-1">Protection</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-4">Stay Updated</h3>
+                <p class="text-[11px] italic text-slate-400">Get the latest market insights and banking offers.</p>
+                <div class="flex bg-white/5 rounded-lg border border-white/10 p-1.5">
+                    <input type="email" placeholder="Professional Email" class="bg-transparent border-none text-[11px] px-3 w-full focus:outline-none text-white">
+                    <button class="bg-[#b8a180] text-black text-[9px] font-black px-6 py-2 rounded uppercase hover:bg-[#a68e6b] transition-all">Join</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-[1400px] mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex flex-col items-center md:items-start gap-2">
+                <p class="text-[9px] font-black uppercase tracking-widest">© 2026 ICT DIVISION | CHITTAGONG BANK PLC</p>
+                <p class="text-[7px] text-slate-500 uppercase font-bold tracking-tighter">Regulated by Bangladesh Bank | Financial License #CBL-098-CTN</p>
+            </div>
+            
+            <div class="px-4 py-1.5 rounded-full border border-red-500/20 bg-red-500/5 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                <span class="text-[8px] font-black uppercase tracking-[0.2em] text-red-500">End-to-end encrypted session</span>
+            </div>
+
+            <p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">
+                System Founder & Maintained by <span class="text-white border-b border-white/20 pb-0.5">Priyabrata Chowdhury</span>
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const roleBtns = document.querySelectorAll('.role-btn');
+            roleBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    roleBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

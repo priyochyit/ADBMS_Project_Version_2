@@ -69,8 +69,7 @@ const translations = {
 // Data Persistence Logic
 // Using 'let' allows us to modify the array, but we will use splice for deletions
 let usersData = JSON.parse(localStorage.getItem('adms_records')) || [
-    { id: 101, name: "Priyabrata Chowdhury", email: "admin@cbl.com", role: "Admin", branch: "Agrabad" },
-    { id: 102, name: "System User", email: "user@cbl.com", role: "Staff", branch: "GEC" }
+    { id: 101, name: "Priyabrata Chowdhury", email: "admin@cbl.com", role: "Admin", branch: "Agrabad" }
 ];
 
 const Lang = {
@@ -365,4 +364,5 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initial Render check (if needed)
     // Admin.renderTable(); // Uncomment if table is visible by default
+
 });

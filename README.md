@@ -50,14 +50,19 @@ Accent: Emerald (Status Indicators)
 
 
 🚀 Quick Start:
+
 Clone the Repository:
 
 Bash
+
 git clone https://github.com/priyochyit/ADBMS_Project_Version_2.git
+
 Navigate to the Directory:
 
 Bash
+
 cd ADBMS_Project_Version_2
+
 Launch the Application: Simply open home.html in any modern web browser. No build steps are required as it utilizes CDN-based Tailwind CSS.
 
 

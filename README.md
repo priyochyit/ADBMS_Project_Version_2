@@ -1,95 +1,53 @@
-🏦 Chittagong Bank PLC (Frontend v2.0)
-Digital Banking Reimagined: Secure, Modern, and Localized.
+🏦 Chittagong Bank PLC | ADMS Project (Frontend V2)
+Enterprise-Grade Banking Database Management System
 
-Chittagong Bank PLC is a high-fidelity digital banking interface designed with a focus on regional accessibility and enterprise-grade security. This projects Front-end Version 2.0 introduces a refined "Golden Bronze" design system, biometric simulation, and a full administrative dashboard.
+📌 Executive Summary
+ADMS Project V2 is a high-fidelity banking management solution designed to handle secure financial operations and multi-tier user hierarchies. Built with a focus on the ACID properties of DBMS, this system ensures data integrity while providing a seamless, modern UI for administrators and end-users.
 
+🏗 System Architecture
+The application follows the Model-View-Controller (MVC) pattern:
 
-✨ Key Features:
-🔐 Security Hub
-Multi-Layer Authentication: Integrated support for User, Staff, and Admin roles.
+Backend: Python/Flask logic managing session states and secure routing.
 
-Biometric Integration: Simulated fingerprint scanning for secure login and registration.
+Frontend: Responsive Jinja2 templates styled with Tailwind CSS for a premium "Glassmorphism" feel.
 
-Encryption Layer: UI indicators for Military-Grade AES-512 encryption and End-to-End enforcement.
+Data Layer: PostgreSQL (via Neon) utilizing SQLAlchemy for object-relational mapping and complex queries.
 
-Live Surveillance: Real-time infrastructure status monitoring (99.9% uptime visualization).
+⚡ Core Functionalities (CRUD & Beyond)
+🟢 Administrative Control (The Master Panel)
+Dynamic Data Grid: Real-time visualization of the entire user registry.
 
+Account Governance: Ability to Create, Edit, and Terminate user records via secure modals.
 
-🎨 Premium UI/UX:
-Golden Bronze Aesthetics: A sophisticated custom palette (#b8a180) designed for a premium banking feel.
+Treasury Management: A specialized logic to disburse salaries from the admin treasury to staff accounts with balance validation.
 
-Adaptive Theme: Full support for system-aware Dark/Light modes via Tailwind CSS.
+🔵 User & Staff Experience
+Role-Based Access Control (RBAC): Distinct dashboards for Admins, Staff, and Users.
 
-Glassmorphism: Modern frosted-glass panels with backdrop-filter effects.
+Secure Ledger: Users can track their balance and transaction placeholders in a high-end interface.
 
-Responsive Architecture: Seamless transitions from desktop to mobile-specific sidebar menus.
+🔐 Security & Validation
+Bcrypt Encryption: Industry-standard password hashing.
 
+Integrity Checks: Server-side validation to prevent negative balance transfers and empty field submissions.
 
-📈 Banking Tools:
-Regional Localization: Toggle between English and Bengali (BN) languages.
+🛠 Tech Stack & Tools
+Logic: Python 3.x, Flask
 
-Exchange Rate Engine: Live-tracking simulation for USD, EUR, and GBP against BDT.
+Database: PostgreSQL, SQLAlchemy (ORM)
 
-Branch Directory: Categorized view of Chattogram and Dhaka branches with real-time operational status.
+Security: Flask-Login, Bcrypt
 
-Feature Suite: Quick-access modules for Fund Transfers, E-Statements, and Card Controls.
+UI/UX: Tailwind CSS, JavaScript (ES6+), Font-Awesome
 
-
-🛠️ Technical Stack
-HTML5: Semantic structure for maximum accessibility.
-
-Tailwind CSS: Utility-first styling with custom configurations for the "Golden Bronze" theme.
-
-JavaScript (ES6+): Logic for UI state management, role switching, and modal handling.
-
-Design Tokens: * Primary: #b8a180 (Golden Bronze)
-
-Background: #0a0a0a (Deep Charcoal Dark Mode)
-
-Accent: Emerald (Status Indicators)
-
-
-🚀 Quick Start:
-
-Clone the Repository:
+📥 Quick Start
+Clone & Install:
 
 Bash
-
 git clone https://github.com/priyochyit/ADBMS_Project_Version_2.git
+pip install -r requirements.txt
+Environment Setup: Update SQLALCHEMY_DATABASE_URI in app.py.
 
-Navigate to the Directory:
-
+Execute:
 Bash
-
-cd ADBMS_Project_Version_2
-
-Launch the Application: Simply open home.html in any modern web browser. No build steps are required as it utilizes CDN-based Tailwind CSS.
-
-
-📂 Project Structure:
-Plaintext
-├── home.html        # Main entry point & interface structure
-├── style.css        # Custom glassmorphism & animation overrides
-├── script.js       # Core logic, Auth simulation, and Lang switching
-└── Logo(CBL).svg    # Official bank branding asset
-
-
-🛡️ Compliance & Standards:
-The interface is designed to reflect modern banking compliance standards:
-
-ISO 27001 Certified Design
-
-PCI-DSS Compliant Layout
-
-GDPR Ready Data Handling
-
-
-👨‍💻 System Architect & Lead Developer: Priyabrata Chowdhury [B.Sc. in CSE, USTC]
-
-
-🤝 Contributing
-Fork the Project
-Create your Feature Branch (git checkout -b feature/AmazingFeature)
-Commit your Changes (git commit -m 'Add some AmazingFeature')
-Push to the Branch (git push origin feature/AmazingFeature)
-Open a Pull Request
+python app.py
